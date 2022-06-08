@@ -133,6 +133,7 @@ def find_qrcode(bgr_img):
     for i in range(len(contours)):
         area = cv2.contourArea(contours[i])
         rect = cv2.minAreaRect(contours[i])
+        # print(rect)
 
         h = rect[1][0]
         w = rect[1][1]
@@ -148,10 +149,12 @@ def find_qrcode(bgr_img):
     direction = []
     number = []
     center_all = []
+    typeqr_all = []
 
     for i in range(len(squares)):
         if areas[i] > max_area*0.4 and areas[i] < max_area*2:
             box = np.int0(cv2.boxPoints(rects[i]))
+            # print(box)
             area_new = cv2.contourArea(box)
             if abs(area_new - areas[i]) < areas[i]*0.9:
 
@@ -162,6 +165,7 @@ def find_qrcode(bgr_img):
                 center[0] = cX
                 center[1] = cY
                 center = center.astype(int)
+                # print(center)
                 center_all.append(center)
 
                 cv2.drawContours(color, [box], -1, (255, 0, 0), 5)
@@ -180,21 +184,32 @@ def find_qrcode(bgr_img):
                 _, rotateimgb = cv2.threshold(rotateimg, 70, 255, cv2.THRESH_BINARY)
 
                 rotateimgb = rotate(rotateimgb, rects[i][2] - 90)
+
+                # 1 is big 0.833, 0 is 0.885
                 typeqr = 1
 
                 typeqr = findtype(number, rotateimgb, typeqr)
                 
                 thres = 70
 
+                if typeqr == 3:
+                    print("rnmtq")
                 while typeqr == 3:
                     print("binary adjust applied")
                     if thres < 170:
                         thres = thres + 10
+                        print("#####")
+                        print(thres)
+                        print("#####")
+                        # 为什么只给1啊
                         typeqr = 1
                         _, rotateimgb = cv2.threshold(rotateimg, thres, 255, cv2.THRESH_BINARY)
                         rotateimgb = rotate(rotateimgb,rects[i][2] - 90)
                         typeqr = findtype(number,rotateimgb,typeqr)
                     else:
+                        print("#####")
+                        print("binary adjust failed")
+                        print("#####")
                         break
                     
                 if typeqr != 3:
@@ -202,15 +217,18 @@ def find_qrcode(bgr_img):
                     degree = finddirection(bin, number, rotateimgb, box, typeqr)
                     direction.append(degree + 90 - rects[i][2])
 
-    return color, scale, direction, center_all, typeqr
+                typeqr_all.append(typeqr)
 
-def find_num_box(color, scale, direction, center_all, typeqr):
+    return color, scale, direction, center_all, typeqr_all
+
+def find_num_box(color, scale, direction, center_all, typeqr_all):
     
     num_box_all = []
 
     for i in range(len(direction)):
 
         center = center_all[i]
+        typeqr = typeqr_all[i]
         side = scale[i]
         rot_angle = (direction[i]+180) * math.pi/180
         
@@ -270,12 +288,13 @@ def find_num_box(color, scale, direction, center_all, typeqr):
 
 
 
-def find_antigen_box(color, scale, direction, center_all, typeqr):
+def find_antigen_box(color, scale, direction, center_all, typeqr_all):
     antigen_box_all = []
 
     for i in range(len(direction)):
 
         center = center_all[i]
+        typeqr = typeqr_all[i]
         side = scale[i]
         rot_angle = (direction[i]+180) * math.pi/180
 
