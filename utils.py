@@ -54,7 +54,7 @@ def qrcode(img):
                 typeqr = 3
     return out, typeqr, degree
 
-def findtype(number, rotateimg, typeqr):
+def findtype(number, rotateimg):
     num, typeqrt ,degree = qrcode(rotateimg)
     if num == 2021231057:
         typeqrt = 3
@@ -62,7 +62,7 @@ def findtype(number, rotateimg, typeqr):
         number.append(num)
     return typeqrt
 
-def finddirection(bin, number, rotateimgb, box, typeqr):
+def finddirection(bin, box, typeqr):
     
     # orient gene
     if typeqr == 0:
@@ -186,9 +186,8 @@ def find_qrcode(bgr_img):
                 rotateimgb = rotate(rotateimgb, rects[i][2] - 90)
 
                 # 1 is big 0.833, 0 is 0.885
-                typeqr = 1
 
-                typeqr = findtype(number, rotateimgb, typeqr)
+                typeqr = findtype(number, rotateimgb)
                 
                 thres = 70
 
@@ -197,25 +196,27 @@ def find_qrcode(bgr_img):
                 while typeqr == 3:
                     print("binary adjust applied")
                     if thres < 170:
-                        thres = thres + 10
+                        thres = thres + 5
                         print("#####")
                         print(thres)
                         print("#####")
-                        # 为什么只给1啊
-                        typeqr = 1
+                        
                         _, rotateimgb = cv2.threshold(rotateimg, thres, 255, cv2.THRESH_BINARY)
                         rotateimgb = rotate(rotateimgb,rects[i][2] - 90)
-                        typeqr = findtype(number,rotateimgb,typeqr)
+                        typeqr = findtype(number,rotateimgb)
                     else:
                         print("#####")
                         print("binary adjust failed")
                         print("#####")
+                        number.append("QR code reflect light")
                         break
                     
                 if typeqr != 3:
                     _, bin = cv2.threshold(gray, thres, 255, cv2.THRESH_BINARY)
-                    degree = finddirection(bin, number, rotateimgb, box, typeqr)
+                    degree = finddirection(bin, box, typeqr)
                     direction.append(degree + 90 - rects[i][2])
+                else:
+                    direction.append(direction[-1])
 
                 typeqr_all.append(typeqr)
 
