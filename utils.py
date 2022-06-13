@@ -215,10 +215,12 @@ def find_qrcode(bgr_img):
                     _, bin = cv2.threshold(gray, thres, 255, cv2.THRESH_BINARY)
                     degree = finddirection(bin, box, typeqr)
                     direction.append(degree + 90 - rects[i][2])
+                    typeqr_all.append(typeqr)
                 else:
                     direction.append(direction[-1])
+                    typeqr_all.append(typeqr_all[-1])
 
-                typeqr_all.append(typeqr)
+                
 
     return color, scale, direction, center_all, typeqr_all
 
