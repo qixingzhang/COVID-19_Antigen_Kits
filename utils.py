@@ -210,7 +210,7 @@ def find_qrcode(bgr_img):
                 for jj in range(2*int(np.around(np.sqrt(area_new)))):
                     rotateimg[ii][jj] = gray[int(cen[1])-int(np.around(np.sqrt(area_new)))+ii][int(cen[0])-int(np.around(np.sqrt(area_new)))+jj]
             
-            _, rotateimgb = cv2.threshold(rotateimg, 70, 255, cv2.THRESH_BINARY)
+            _, rotateimgb = cv2.threshold(rotateimg, 60, 255, cv2.THRESH_BINARY)
             # plt.imshow(rotateimgb, 'gray')
             # plt.show()
             # print(rects[i])
@@ -219,13 +219,13 @@ def find_qrcode(bgr_img):
             typeqr = findtype(number, rotateimgb)
             print('TYPE:', typeqr)
             
-            thres = 70
+            thres = 60
             if typeqr == 3:
                 print("rnmtq")
             while typeqr == 3:
                 print("binary adjust applied")
                 if thres < 170:
-                    thres = thres + 5
+                    thres = thres + 1
                     print("#####")
                     print(thres)
                     print("#####")
