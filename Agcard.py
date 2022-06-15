@@ -16,8 +16,8 @@ Positive
 '''
 Negative
 '''
-# img_in = cv2.imread('./negative/IMG_1704.JPG') # 8/12
-img_in = cv2.imread('./negative/IMG_1705.JPG') # 11/15
+# img_in = cv2.imread('./negative/IMG_1704.JPG') # 11/12
+# img_in = cv2.imread('./negative/IMG_1705.JPG') # 13/15
 
 '''
 Invalid
@@ -30,15 +30,11 @@ Invalid
 # img_in = cv2.imread('./invalid/IMG_1732.JPG') # 1/1
 # img_in = cv2.imread('./invalid/u1.png') # 1/1
 # img_in = cv2.imread('./invalid/u2.png') # 1/1
-# img_in = cv2.imread('./invalid/u3.png') # OCR不准, typeqr不对, direction错误
+img_in = cv2.imread('./invalid/u3.png') # OCR不准, typeqr不对, direction错误
 
 '''
 Hardmode
 '''
-# img_in = cv2.imread('./Hardmode/IMG_20220401_125229.jpg')
-# img_in = cv2.imread('./Hardmode/IMG_20220403_093921.jpg')
-# img_in = cv2.imread('./Hardmode/IMG_20220403_154909.jpg')
-
 # img_in = cv2.imread('./Hardmode/IMG_20220410_130941.jpg') # 3/4 OCR不准, typeqr不对, direction错误
 # img_in = cv2.imread('./Hardmode/IMG_20220411_191854.jpg') # 3/4 OCR failure, direction错误
 # img_in = cv2.imread('./Hardmode/IMG_20220412_094755.jpg') # 4/4
@@ -69,15 +65,16 @@ def cv2_putText_CN(img, text, left, top, textColor=(0, 255, 0), textSize=20):
     draw.text((left, top), text, textColor, font=fontStyle)
     return cv2.cvtColor(np.asarray(img), cv2.COLOR_RGB2BGR)
 
-result_path = './result'
-if not os.path.exists(result_path):
-    os.mkdir(result_path)
-else:
-    shutil.rmtree(result_path)
-    os.mkdir(result_path)
+# result_path = './result'
+# if not os.path.exists(result_path):
+#     os.mkdir(result_path)
+# else:
+#     shutil.rmtree(result_path)
+#     os.mkdir(result_path)
 
+cnt = 0
 for i in range(len(antigen_box_all)):
-    if typeqr_all[i] != 3:
+    if typeqr_all[i] >= 0:
         card = split_card(img_in, antigen_all[i], box_qrcode[i], antigen_box_all[i], num_box_all[i], scale[i], direction[i], typeqr_all[i])
         if card != None and card['result'] != 'None':
             img_tmp = card['img']
@@ -98,8 +95,10 @@ for i in range(len(antigen_box_all)):
             img_tmp = cv2.rectangle(img_tmp, card['box_qrcode'][0], card['box_qrcode'][1], (0, 255, 0), 2)
             img_tmp = cv2_putText_CN(img_tmp, number[i], card['box_qrcode'][0, 0], card['box_qrcode'][0, 1], (0, 255, 0), 30)
             
-            cv2.imwrite('./result/%s.jpg'%(number[i].split('=')[-1]), img_tmp)
+            jpg_name = './result_easymode/%s.jpg'%(SN[4:])
+            print(jpg_name)
+            cv2.imwrite(jpg_name, img_tmp)
 
-plt.figure()
-plt.imshow(img_fin_out[:, :, [2, 1, 0]])
-plt.show()
+# plt.figure()
+# plt.imshow(img_fin_out[:, :, [2, 1, 0]])
+# plt.show()

@@ -237,7 +237,7 @@ def find_qrcode(bgr_img):
                     print("#####")
                     print("binary adjust failed")
                     print("#####")
-                    number.append("QR code reflect light")
+                    number.append("QR code fail")
                     break
                 
             if typeqr != 3:
@@ -245,9 +245,12 @@ def find_qrcode(bgr_img):
                 degree = finddirection(bin, box, typeqr)
                 direction.append(degree + 90 - rects[i][2])
                 typeqr_all.append(typeqr)
+            elif len(direction) != 0:
+                direction.append(direction[-1])
+                typeqr_all.append(typeqr_all[-1])
             else:
                 direction.append(180)
-                typeqr_all.append(3)
+                typeqr_all.append(2)
 
     print("scale: ", scale)            
 
