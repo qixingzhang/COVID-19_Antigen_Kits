@@ -598,6 +598,7 @@ def extract_antigen(img_in, antigen_all, direction, typeqr_all):
 
 def find_antigen(color, scale, direction, center_all, typeqr_all):
     antigen_all = []
+    antigen_center_all = []
 
     for i in range(len(direction)):
 
@@ -653,13 +654,22 @@ def find_antigen(color, scale, direction, center_all, typeqr_all):
             antigen_3[:, 1] = int(antigen_0[:, 1] + (5.805 * side) * math.cos(rot_angle))
             
             antigen_box = np.vstack((antigen_0, antigen_1, antigen_2, antigen_3)).astype(int)
-            
+
+        M = cv2.moments(antigen_box)
+        antigen_center = np.zeros(2)
+        cX = int(M["m10"] / M["m00"])
+        cY = int(M["m01"] / M["m00"])
+        antigen_center[0] = cX
+        antigen_center[1] = cY
+        antigen_center = antigen_center.astype(int)
+        antigen_center_all.append(antigen_center)
+
         antigen_all.append(antigen_box)
 
         # img_num = cv2.drawContours(color, [antigen_box], -1, (255, 255, 0), 5)
         cv2.drawContours(color, [antigen_box], -1, (0, 255, 0), 5)
         
-    return color, antigen_all
+    return color, antigen_all, antigen_center_all
 
 def row_segment(img):
     row_seg = []

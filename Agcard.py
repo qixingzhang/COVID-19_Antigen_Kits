@@ -16,8 +16,8 @@ Positive
 '''
 Negative
 '''
-# img_in = cv2.imread('./negative/IMG_1704.JPG')
-img_in = cv2.imread('./negative/IMG_1705.JPG')
+img_in = cv2.imread('./negative/IMG_1704.JPG')
+# img_in = cv2.imread('./negative/IMG_1705.JPG')
 
 '''
 Invalid
@@ -53,7 +53,8 @@ img_out, scale, direction, center_all, typeqr_all, box_qrcode, number = find_qrc
 
 img_num_out, num_box_all = find_num_box(img_out, scale, direction, center_all, typeqr_all)
 img_antigen_out, antigen_box_all = find_antigen_box(img_num_out, scale, direction, center_all, typeqr_all)
-img_fin_out, antigen_all = find_antigen(img_antigen_out, scale, direction, center_all, typeqr_all)
+img_fin_out, antigen_all, antigen_center_all = find_antigen(img_antigen_out, scale, direction, center_all, typeqr_all)
+
 # img_antigen_all = extract_antigen(img_fin_out, antigen_box_all, direction, typeqr_all)
 
 def cv2_putText_CN(img, text, left, top, textColor=(0, 255, 0), textSize=20):
@@ -99,6 +100,7 @@ for i in range(len(antigen_box_all)):
             if os.path.exists(jpg_name):
                 print('exist', jpg_name)
             print(jpg_name)
+            print('antigen center: ', antigen_center_all[i])
             cv2.imwrite(jpg_name, img_tmp)
 
 # plt.figure()
