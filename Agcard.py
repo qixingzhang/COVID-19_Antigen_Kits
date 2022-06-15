@@ -9,45 +9,45 @@ import os
 '''
 Positive
 '''
-# img_in = cv2.imread('./positive/p1.png') # 1/1
-# img_in = cv2.imread('./positive/p2.png') # 1/1
-# img_in = cv2.imread('./positive/p3.png') # direction错误
+# img_in = cv2.imread('./positive/p1.png')
+# img_in = cv2.imread('./positive/p2.png')
+# img_in = cv2.imread('./positive/p3.png')
 
 '''
 Negative
 '''
-# img_in = cv2.imread('./negative/IMG_1704.JPG') # 11/12
-# img_in = cv2.imread('./negative/IMG_1705.JPG') # 13/15
+# img_in = cv2.imread('./negative/IMG_1704.JPG')
+img_in = cv2.imread('./negative/IMG_1705.JPG')
 
 '''
 Invalid
 '''
-# img_in = cv2.imread('./invalid/IMG_1716.JPG') # 1/1
-# img_in = cv2.imread('./invalid/IMG_1717.JPG') # 1/1
-# img_in = cv2.imread('./invalid/IMG_1718.JPG') # 1/1
-# img_in = cv2.imread('./invalid/IMG_1720.JPG') # direction错误
-# img_in = cv2.imread('./invalid/IMG_1731.JPG') # direction错误
-# img_in = cv2.imread('./invalid/IMG_1732.JPG') # 1/1
-# img_in = cv2.imread('./invalid/u1.png') # 1/1
-# img_in = cv2.imread('./invalid/u2.png') # 1/1
-img_in = cv2.imread('./invalid/u3.png') # OCR不准, typeqr不对, direction错误
+# img_in = cv2.imread('./invalid/IMG_1716.JPG')
+# img_in = cv2.imread('./invalid/IMG_1717.JPG')
+# img_in = cv2.imread('./invalid/IMG_1718.JPG')
+# img_in = cv2.imread('./invalid/IMG_1720.JPG')
+# img_in = cv2.imread('./invalid/IMG_1731.JPG')
+# img_in = cv2.imread('./invalid/IMG_1732.JPG')
+# img_in = cv2.imread('./invalid/u1.png')
+# img_in = cv2.imread('./invalid/u2.png')
+# img_in = cv2.imread('./invalid/u3.png')
 
 '''
 Hardmode
 '''
-# img_in = cv2.imread('./Hardmode/IMG_20220410_130941.jpg') # 3/4 OCR不准, typeqr不对, direction错误
-# img_in = cv2.imread('./Hardmode/IMG_20220411_191854.jpg') # 3/4 OCR failure, direction错误
-# img_in = cv2.imread('./Hardmode/IMG_20220412_094755.jpg') # 4/4
-# img_in = cv2.imread('./Hardmode/IMG_20220412_172702.jpg') # 二维码两个框, OCR不准 | 没想到解决办法，可以按照重复的number删掉
-# img_in = cv2.imread('./Hardmode/IMG_20220413_202942.jpg') #  4/4 OCR不准
-# img_in = cv2.imread('./Hardmode/IMG_20220416_193028.jpg') # 4/4 OCR不准
-# img_in = cv2.imread('./Hardmode/IMG_20220419_135919.jpg') # 4/4
+# img_in = cv2.imread('./Hardmode/IMG_20220410_130941.jpg')
+# img_in = cv2.imread('./Hardmode/IMG_20220411_191854.jpg')
+# img_in = cv2.imread('./Hardmode/IMG_20220412_094755.jpg')
+# img_in = cv2.imread('./Hardmode/IMG_20220412_172702.jpg')
+# img_in = cv2.imread('./Hardmode/IMG_20220413_202942.jpg')
+# img_in = cv2.imread('./Hardmode/IMG_20220416_193028.jpg')
+# img_in = cv2.imread('./Hardmode/IMG_20220419_135919.jpg')
 
-# img_in = cv2.imread('./Hardmode/IMG_20220421_085725.jpg') #  2/4 OCR failure, typrqr不对, direction错误
-# img_in = cv2.imread('./Hardmode/IMG_20220422_191738.jpg') # 3/4
-# img_in = cv2.imread('./Hardmode/IMG_20220429_193302.jpg') # 4/4
-# img_in = cv2.imread('./Hardmode/IMG_20220430_082437.jpg') # 少圈一个，OCR有问题
-# img_in = cv2.imread('./Hardmode/IMG_20220430_082819.jpg') # OCR failure
+# img_in = cv2.imread('./Hardmode/IMG_20220421_085725.jpg')
+# img_in = cv2.imread('./Hardmode/IMG_20220422_191738.jpg')
+# img_in = cv2.imread('./Hardmode/IMG_20220429_193302.jpg')
+# img_in = cv2.imread('./Hardmode/IMG_20220430_082437.jpg')
+# img_in = cv2.imread('./Hardmode/IMG_20220430_082819.jpg')
 
 img_out, scale, direction, center_all, typeqr_all, box_qrcode, number = find_qrcode(img_in)
 
@@ -96,9 +96,12 @@ for i in range(len(antigen_box_all)):
             img_tmp = cv2_putText_CN(img_tmp, number[i], card['box_qrcode'][0, 0], card['box_qrcode'][0, 1], (0, 255, 0), 30)
             
             jpg_name = './result_easymode/%s.jpg'%(SN[4:])
+            if os.path.exists(jpg_name):
+                print('exist', jpg_name)
             print(jpg_name)
             cv2.imwrite(jpg_name, img_tmp)
 
 # plt.figure()
+# plt.axis('off')
 # plt.imshow(img_fin_out[:, :, [2, 1, 0]])
 # plt.show()
